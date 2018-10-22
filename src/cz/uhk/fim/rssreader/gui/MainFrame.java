@@ -1,17 +1,21 @@
 package cz.uhk.fim.rssreader.gui;
 
-
-
-import cz.uhk.fim.rssreader.utils.ErrorsType;
+import cz.uhk.fim.rssreader.model.RSSList;
+import cz.uhk.fim.rssreader.model.RssItem;
 import cz.uhk.fim.rssreader.utils.FileUtils;
+import cz.uhk.fim.rssreader.utils.RssParser;
+import org.xml.sax.SAXException;
 
 import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class MainFrame extends JFrame {
+
+    private RSSList rssList;
 
     public MainFrame() {
         init();
@@ -37,6 +41,7 @@ public class MainFrame extends JFrame {
         lblValidation.setHorizontalAlignment(JLabel.CENTER);
 
 
+
         controlPanel.add(btnLoad,"West");
         controlPanel.add(btnSave,"East");
         controlPanel.add(txtInputField,"Center");
@@ -45,7 +50,6 @@ public class MainFrame extends JFrame {
 
         JTextArea txtContent  = new JTextArea();
         add(new JScrollPane(txtContent),"Center");
-
 
         btnLoad.addMouseListener(new MouseAdapter() {
             @Override
@@ -66,7 +70,7 @@ public class MainFrame extends JFrame {
         btnSave.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                try {
+               /*try {
                     if(!FileUtils.validateInput(lblValidation,txtInputField.getText())){
                         throw  new IOException(lblValidation.getText());
                     }
@@ -75,7 +79,21 @@ public class MainFrame extends JFrame {
                     e1.printStackTrace();
                     FileUtils.validateInput(lblValidation,"SAVE_ERROR");
                     System.out.println(e1.getMessage());
+                }*/
+                try {
+                    rssList = new RssParser().getParsedRSS(txtInputField.getText());
+                    txtContent.setText("");
+                    for(RssItem item : rssList.getAllItems()){
+                        txtContent.append(String.format("%s - autor: %s%n",item.getTitle(),item.getAuthor()));
+                    }
+                } catch (ParserConfigurationException e1) {
+                    e1.printStackTrace();
+                } catch (SAXException e1) {
+                    e1.printStackTrace();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
                 }
+
             }
         });
 
