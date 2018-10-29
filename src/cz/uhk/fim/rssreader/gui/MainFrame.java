@@ -23,10 +23,9 @@ public class MainFrame extends JFrame {
 
     private void init(){
         setTitle("RSS Reader");
-        setSize(1366,768);
+        setSize(1024,640);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-
         initContentUI();
 
     }
@@ -48,10 +47,24 @@ public class MainFrame extends JFrame {
         controlPanel.add(lblValidation,"South");
         add(controlPanel,"North");
 
-        JTextArea txtContent  = new JTextArea();
-        add(new JScrollPane(txtContent),"Center");
+        JPanel contentPanel = new JPanel(new WrapLayout());
 
-        btnLoad.addMouseListener(new MouseAdapter() {
+        add(new JScrollPane(contentPanel),"Center");
+
+        try {
+            rssList = new RssParser().getParsedRSS("rssVC.xml");
+            for(RssItem item : rssList.getAllItems()){
+                contentPanel.add(new CardView(item));
+            }
+        } catch (ParserConfigurationException e1) {
+            e1.printStackTrace();
+        } catch (SAXException e1) {
+            e1.printStackTrace();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+
+      /*  btnLoad.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
@@ -79,7 +92,7 @@ public class MainFrame extends JFrame {
                     e1.printStackTrace();
                     FileUtils.validateInput(lblValidation,"SAVE_ERROR");
                     System.out.println(e1.getMessage());
-                }*/
+                }
                 try {
                     rssList = new RssParser().getParsedRSS(txtInputField.getText());
                     txtContent.setText("");
@@ -95,7 +108,8 @@ public class MainFrame extends JFrame {
                 }
 
             }
-        });
+        });       */
+
 
 
     }
