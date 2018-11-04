@@ -19,13 +19,13 @@ public class CardView extends JPanel {
         setSize(ITEM_WIDTH,HEIGHT);
         setTitle(item.getTitle());
         setDescription(item.getDescription());
-        setBackground(new Color(item.hashCode()).brighter());
+        setBackground(new Color(item.getTitle().hashCode()).brighter());
         setInfo(String.format("%s - %s",item.getPubDate(),item.getAuthor()));
     }
 
     private void setDescription(String description) {
         JLabel lblDescription = new JLabel();
-        lblDescription.setText(String.format("%s%s%s",startHTML,description,endHTML));
+        lblDescription.setText(String.format("%s%s%s",startHTML,shorted(description),endHTML));
         lblDescription.setSize(ITEM_WIDTH,HEIGHT);
         lblDescription.setFont(new Font(Font.MONOSPACED,Font.PLAIN,11));
         add(lblDescription);
@@ -33,7 +33,7 @@ public class CardView extends JPanel {
 
     private void setTitle(String title) {
         JLabel lblTitle = new JLabel();
-        lblTitle.setText(String.format("%s%s%s",startHTML,shorted(title),endHTML));
+        lblTitle.setText(String.format("%s%s%s",startHTML,title,endHTML));
         lblTitle.setSize(WIDTH,HEIGHT);
         lblTitle.setFont(new Font(Font.MONOSPACED,Font.BOLD,12));
         add(lblTitle);
@@ -49,8 +49,8 @@ public class CardView extends JPanel {
     }
 
     private String shorted(String input){
-        if(input.length()>25){
-            return input.substring(0,25)+"...";
+        if(input.length()>50){
+            return input.substring(0,50)+"...";
         }
         return input;
     }
