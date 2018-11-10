@@ -10,6 +10,11 @@ import java.nio.file.Paths;
 
 public class FileUtils {
 
+    public static final String BACKGROUND_COLOR = "0x119add";
+    public static final String HEADER_COLOR = "0xffffff";
+    public static final String TEXT_COLOR = "0x1a1a1a";
+    public static final String INFO_COLOR = "0xdddddd";
+
     public static String loadStringFromFile(String filepath)throws IOException {
 
         return new String(Files.readAllBytes(Paths.get(filepath)));

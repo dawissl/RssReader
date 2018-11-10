@@ -37,8 +37,6 @@ public class MainFrame extends JFrame {
         JLabel lblValidation = new JLabel();
         lblValidation.setHorizontalAlignment(JLabel.CENTER);
 
-
-
         controlPanel.add(btnLoad,"West");
         controlPanel.add(btnSave,"East");
         controlPanel.add(txtInputField,"Center");
@@ -50,7 +48,7 @@ public class MainFrame extends JFrame {
         add(new JScrollPane(contentPanel),"Center");
 
         try {
-            rssList = new RssParser().getParsedRSS("rssVC.xml");
+            rssList = new RssParser().getParsedRSS("zive.xml");
             for(RssItem item : rssList.getAllItems()){
                 contentPanel.add(new CardView(item));
             }

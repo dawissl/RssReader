@@ -12,16 +12,16 @@ public class CardView extends JPanel {
     private static final int WIDTH = 180;
     private static final int ITEM_WIDTH = 160;
     private static final int HEIGHT = 1;
-    final String startHTML = "<html><p style='width:" + ITEM_WIDTH + " px'>";
-    final String endHTML = "</p></html>";
+    private final String startHTML = "<html><p style='width:" + ITEM_WIDTH + " px'>";
+    private final String endHTML = "</p></html>";
     private RssItem rssItem;
 
     public CardView(RssItem item) {
         setLayout(new WrapLayout());
         setSize(ITEM_WIDTH, HEIGHT);
+        setBackground(new Color(item.getTitle().hashCode()).brighter());
         setTitle(item.getTitle());
         setDescription(item.getDescription());
-        setBackground(new Color(item.getTitle().hashCode()).brighter());
         setInfo(String.format("%s - %s", item.getPubDate(), item.getAuthor()));
         initListeners();
         rssItem=item;
@@ -32,7 +32,7 @@ public class CardView extends JPanel {
           @Override
           public void mouseClicked(MouseEvent e) {
               if(e.getClickCount()==2){
-                  SwingUtilities.invokeLater(()->new DetailFrame(rssItem).setVisible(true));
+                  SwingUtilities.invokeLater(()->new DetailView(rssItem).setVisible(true));
               }
           }
       });
