@@ -1,6 +1,7 @@
 package cz.uhk.fim.rssreader.gui;
 
 import cz.uhk.fim.rssreader.model.RSSList;
+import cz.uhk.fim.rssreader.model.RSSSource;
 import cz.uhk.fim.rssreader.model.RssItem;
 import cz.uhk.fim.rssreader.utils.FileUtils;
 import cz.uhk.fim.rssreader.utils.RssParser;
@@ -9,7 +10,12 @@ import org.xml.sax.SAXException;
 import javax.swing.*;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainFrame extends JFrame {
 
@@ -48,7 +54,7 @@ public class MainFrame extends JFrame {
         add(new JScrollPane(contentPanel),"Center");
 
         try {
-            rssList = new RssParser().getParsedRSS("zive.xml");
+            rssList = new RssParser().getParsedRSS("https://videacesky.cz/feed");
             for(RssItem item : rssList.getAllItems()){
                 contentPanel.add(new CardView(item));
             }
@@ -59,6 +65,32 @@ public class MainFrame extends JFrame {
         } catch (IOException e1) {
             e1.printStackTrace();
         }
+
+        btnSave.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<RSSSource> sources = new ArrayList<>();
+                sources.add(new RSSSource("videacesky.cz","https://videacesky.cz/feed"));
+                sources.add(new RSSSource("zive.cz","https://www.zive.cz/rss/sc-47/"));
+                sources.add(new RSSSource("idnes.cz","rssIDNES.xml"));
+                FileUtils.saveSources(sources);
+            }
+        });
+
+        btnLoad.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                List<RSSSource> sources = FileUtils.loadSources();
+                    for(RSSSource source:sources){
+                        System.out.println(source.getName()+" - "+source.getSource());
+                    }
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+
+            }
+        });
 
       /*  btnLoad.addMouseListener(new MouseAdapter() {
             @Override
