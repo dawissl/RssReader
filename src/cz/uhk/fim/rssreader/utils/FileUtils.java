@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 public class FileUtils {
@@ -22,70 +23,40 @@ public class FileUtils {
     public static final String TEXT_COLOR = "0x1a1a1a";
     public static final String INFO_COLOR = "0xdddddd";
 
-    private static final String CONFIG_FILE = "config.cfg";
+    public static final String CONFIG_FILE = "config.cfg";
 
-    public static String loadStringFromFile(String filepath)throws IOException {
-
+    public static String loadStringFromFile(String filepath) throws IOException {
         return new String(Files.readAllBytes(Paths.get(filepath)));
-
     }
 
-    public static void saveStringToFile(String filepath, byte []data)throws IOException{
+    public static void saveStringToFile(String filepath, byte[] data) throws IOException {
         Path path = Paths.get(filepath);
-        Files.write(path,data);
+        Files.write(path, data);
     }
 
-    public static  void saveSources(List<RSSSource> sources){
-        StringBuilder fileContent =new StringBuilder();
-        for(int i=0;i<sources.size();i++){
-            fileContent.append(String.format("%s;%s",sources.get(i).getName(),sources.get(i).getSource()));
-           fileContent.append(i!=sources.size()-1 ? "\n":"");
+    public static void saveSources(List<RSSSource> sources) {
+        StringBuilder fileContent = new StringBuilder();
+
+        for (int i = 0; i < sources.size(); i++) {
+            fileContent.append(String.format("%s;%s", sources.get(i).getName(), sources.get(i).getSource()));
+            fileContent.append(i != sources.size() - 1 ? "\n" : "");
         }
         try {
-            saveStringToFile(CONFIG_FILE,fileContent.toString().getBytes("UTF-8"));
+            saveStringToFile(CONFIG_FILE, fileContent.toString().getBytes("UTF-8"));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+
     public static List<RSSSource> loadSources() throws IOException {
         List<RSSSource> sources = new ArrayList<>();
-        new BufferedReader(new StringReader(loadStringFromFile(CONFIG_FILE))).lines().forEach(line->{
-            String[] parts = line.split(";");
-            sources.add(new RSSSource(parts[0],parts[1]));
+       new BufferedReader(new StringReader(loadStringFromFile(CONFIG_FILE)))
+                .lines().forEach(source -> {
+            String[] parts =  source.split(";");
+            sources.add(new RSSSource(parts[0], parts[1]));
         });
         return sources;
     }
-/*
 
-    public static boolean validateInput(JLabel label,String str){
-        label.setText("Nice, sweat and sexy, man!");
-        label.setForeground(Color.GREEN);
-        if(str.length()==0){
-            label.setText("Empty input!");
-            label.setForeground(Color.RED);
-            return false;
-        }
-
-        if(str.contains(" ")){
-            label.setText("Invalid characters in input!");
-            label.setForeground(Color.RED);
-            return false;
-        }
-
-
-        if(str=="LOAD_ERROR"){
-            label.setText(ErrorsType.LOAD_ERROR.getErrorMessage());
-            label.setForeground(Color.RED);
-            return false;
-        }
-
-        if(str=="SAVE_ERROR"){
-            label.setText(ErrorsType.SAVE_ERROR.getErrorMessage());
-            label.setForeground(Color.RED);
-            return false;
-        }
-
-        return true;
-    }*/
 }

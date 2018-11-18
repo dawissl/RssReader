@@ -25,7 +25,7 @@ public class RssParser{
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser parser = factory.newSAXParser();
 
-        if(source.contains("http")){
+        if(source.contains("https://")){
             parser.parse(new InputSource(new URL(source).openStream()),itemHandler);
         }else{
             parser.parse(new File(source),itemHandler);
