@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 
 public class CardView extends JPanel {
 
+    private int coefficient = 1;
     private static final int WIDTH = 180;
     private static final int ITEM_WIDTH = 160;
     private static final int HEIGHT = 1;
@@ -16,9 +17,9 @@ public class CardView extends JPanel {
     private final String endHTML = "</p></html>";
     private RssItem rssItem;
 
-    public CardView(RssItem item) {
+    public CardView(RssItem item,int coefficient) {
         setLayout(new WrapLayout());
-        setSize(ITEM_WIDTH, HEIGHT);
+        setSize(ITEM_WIDTH*coefficient, HEIGHT);
         setBackground(new Color(item.getTitle().hashCode()).brighter());
         setTitle(item.getTitle());
         setDescription(item.getDescription());
@@ -41,7 +42,7 @@ public class CardView extends JPanel {
  private void setDescription(String description) {
         JLabel lblDescription = new JLabel();
         lblDescription.setText(String.format("%s%s%s", startHTML, shorted(description), endHTML));
-        lblDescription.setSize(ITEM_WIDTH, HEIGHT);
+        lblDescription.setSize(ITEM_WIDTH*coefficient, HEIGHT);
         lblDescription.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 11));
         add(lblDescription);
     }
@@ -49,7 +50,7 @@ public class CardView extends JPanel {
     private void setTitle(String title) {
         JLabel lblTitle = new JLabel();
         lblTitle.setText(String.format("%s%s%s", startHTML, title, endHTML));
-        lblTitle.setSize(WIDTH, HEIGHT);
+        lblTitle.setSize(WIDTH*coefficient, HEIGHT);
         lblTitle.setFont(new Font(Font.MONOSPACED, Font.BOLD, 12));
         add(lblTitle);
     }
@@ -57,7 +58,7 @@ public class CardView extends JPanel {
     private void setInfo(String format) {
         JLabel lblInfo = new JLabel();
         lblInfo.setText(String.format("%s%s%s", startHTML, format, endHTML));
-        lblInfo.setSize(ITEM_WIDTH, HEIGHT);
+        lblInfo.setSize(ITEM_WIDTH*coefficient, HEIGHT);
         lblInfo.setFont(new Font(Font.MONOSPACED, Font.ITALIC, 10));
         lblInfo.setForeground(Color.GRAY);
         add(lblInfo);

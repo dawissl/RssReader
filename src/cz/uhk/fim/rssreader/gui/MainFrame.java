@@ -9,6 +9,8 @@ import cz.uhk.fim.rssreader.utils.RssParser;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -37,6 +39,8 @@ public class MainFrame extends JFrame {
 
     private void initContentUI() {
         JPanel controlPanel = new JPanel(new FlowLayout());
+        JSlider slider = new JSlider(2,4,2);
+        JLabel lblSize= new JLabel("Zoom");
         JButton btnAdd = new JButton("Add");
         JButton btnEdit = new JButton("Edit");
         JButton btnRemove = new JButton("Remove");
@@ -44,6 +48,8 @@ public class MainFrame extends JFrame {
 
         JComboBox<RSSSource> sources = new JComboBox<>();
         sources.setPreferredSize(new Dimension(350, 25));
+        controlPanel.add(lblSize);
+        controlPanel.add(slider);
         controlPanel.add(btnEdit);
         controlPanel.add(btnAdd);
         controlPanel.add(btnRemove);
@@ -59,13 +65,13 @@ public class MainFrame extends JFrame {
         add(new JScrollPane(contentPanel), "Center");
 
         File f = new File(FileUtils.CONFIG_FILE);
-        if(f.exists()&&!f.isDirectory()){
+        if(f.exists()&&!f.isDirectory()&&f.getTotalSpace()>0){
             try {
                 List<RSSSource> list = FileUtils.loadSources();
                 for(RSSSource s:list){
                     sources.addItem(s);
                 }
-                loadArticles(sources, contentPanel);
+                loadArticles(sources, contentPanel,slider.getValue());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -98,6 +104,7 @@ public class MainFrame extends JFrame {
             }
         });
 
+
         btnEdit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -123,8 +130,17 @@ public class MainFrame extends JFrame {
                     if(!lblInfo.isVisible())
                         removeArticles(rssList, contentPanel);
                     lblInfo.setVisible(false);
-                    loadArticles(sources, contentPanel);
+                    loadArticles(sources, contentPanel,slider.getValue());
                 }
+            }
+        });
+
+
+         slider.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                removeArticles(rssList,contentPanel);
+                loadArticles(sources,contentPanel,slider.getValue());
             }
         });
     }
@@ -137,14 +153,14 @@ public class MainFrame extends JFrame {
 
     }
 
-    private void loadArticles(JComboBox<RSSSource> sources, JPanel contentPanel) {
+    private void loadArticles(JComboBox<RSSSource> sources, JPanel contentPanel,int size) {
         try {
 
             RSSSource loadedSource = (RSSSource) sources.getSelectedItem();
             if(loadedSource==null) return;
             rssList = new RssParser().getParsedRSS(loadedSource.getSource());
             for (RssItem item : rssList.getAllItems()) {
-                contentPanel.add(new CardView(item));
+                contentPanel.add(new CardView(item,size));
             }
         } catch (ParserConfigurationException e1) {
             e1.printStackTrace();
